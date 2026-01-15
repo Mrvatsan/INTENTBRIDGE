@@ -1,3 +1,7 @@
+/**
+ * Main function to classify user intent via API
+ * Sends input to backend and displays structured results
+ */
 async function classifyIntent() {
     const userInput = document.getElementById('userInput').value.trim();
     
@@ -10,11 +14,12 @@ async function classifyIntent() {
         return;
     }
     
-    // Show loading
+    // Show loading state
     document.getElementById('loading').classList.remove('hidden');
     document.getElementById('classifyBtn').disabled = true;
     
     try {
+        // Call the classification API
         const response = await fetch('/api/classify', {
             method: 'POST',
             headers: {
@@ -39,8 +44,14 @@ async function classifyIntent() {
     }
 }
 
+/**
+ * Display classification results in the UI
+ * Populates all result fields with color-coded badges and lists
+ * 
+ * @param {Object} data - Structured intent classification result
+ */
 function displayResults(data) {
-    // Populate basic fields
+    // Populate basic fields with dynamic badge styling
     document.getElementById('intentType').textContent = data.intent_type;
     document.getElementById('intentType').className = `value badge badge-${data.intent_type.toLowerCase()}`;
     
@@ -64,16 +75,24 @@ function displayResults(data) {
     document.getElementById('results').classList.remove('hidden');
 }
 
+/**
+ * Populate a list element with items or show "None" if empty
+ * 
+ * @param {string} elementId - ID of the list element to populate
+ * @param {Array} items - Array of items to display
+ */
 function populateList(elementId, items) {
     const listElement = document.getElementById(elementId);
     listElement.innerHTML = '';
     
     if (!items || items.length === 0) {
+        // Display placeholder for empty lists
         const li = document.createElement('li');
         li.textContent = 'None';
         li.className = 'empty';
         listElement.appendChild(li);
     } else {
+        // Create list item for each entry
         items.forEach(item => {
             const li = document.createElement('li');
             li.textContent = item;
