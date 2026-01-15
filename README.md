@@ -1,10 +1,18 @@
-# IntentBridge - Intent Classification Engine
+# IntentBridge
+
+**Intent Classification Engine - Module 1**
 
 A web-based application that converts raw, unstructured human intent into structured, machine-usable representations.
 
-## Overview
+## 🎯 Overview
 
-IntentBridge is NOT a chatbot. It is a system that analyzes raw human input and extracts precise, structured representations of user intent. This is Module 1: Intent Classification Engine.
+IntentBridge is NOT a chatbot. It is a sophisticated system that analyzes raw human input and extracts precise, structured representations of user intent through an 8-step classification process. This is Module 1 of the IntentBridge pipeline - the Intent Classification Engine.
+
+### What makes IntentBridge different?
+- **No conversational AI** - Pure intent extraction without suggestions or advice
+- **Structured output** - JSON-based machine-readable format
+- **Multi-dimensional analysis** - Intent type, goals, constraints, ambiguities, and emotional signals
+- **Confidence scoring** - Transparent quality assessment of classification results
 
 ## Features
 
