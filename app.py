@@ -1,6 +1,11 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import re
+import logging
+
+# Configure logging for debugging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
@@ -39,12 +44,15 @@ class IntentClassificationEngine:
                 - confidence_level: Low, Medium, or High
         """
         if not user_input or not user_input.strip():
+            logger.debug("Empty input received, returning empty response")
             return self._empty_response()
         
+        logger.info(f"Starting classification for input of length {len(user_input)}")
         input_lower = user_input.lower()
         
         # STEP 2: Determine intent type
         intent_type = self._classify_intent_type(input_lower)
+        logger.debug(f"Intent type classified as: {intent_type}")
         
         # STEP 3: Extract primary goal
         primary_goal = self._extract_primary_goal(user_input)
@@ -63,6 +71,8 @@ class IntentClassificationEngine:
         
         # STEP 8: Assign confidence level
         confidence_level = self._calculate_confidence(user_input, primary_goal, ambiguities)
+        
+        logger.info(f"Classification complete: {intent_type} | {confidence_level} confidence | {emotional_signal}")
         
         return {
             "intent_type": intent_type,
