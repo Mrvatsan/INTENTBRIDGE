@@ -24,6 +24,19 @@ class IntentClassificationEngine:
     def classify(self, user_input):
         """
         Execute the 8-step intent classification flow
+        
+        Args:
+            user_input (str): Raw unstructured human intent text
+            
+        Returns:
+            dict: Structured intent representation containing:
+                - intent_type: Learning, Building, Planning, or Unknown
+                - primary_goal: Main objective extracted from input
+                - secondary_goals: Supporting objectives (list)
+                - constraints: Explicit limitations mentioned (list)
+                - ambiguities: Missing or vague information (list)
+                - emotional_signal: Detected emotion (Confused, Motivated, etc.)
+                - confidence_level: Low, Medium, or High
         """
         if not user_input or not user_input.strip():
             return self._empty_response()
@@ -62,7 +75,18 @@ class IntentClassificationEngine:
         }
     
     def _classify_intent_type(self, input_lower):
-        """Classify into Learning, Building, Planning, or Unknown"""
+        """
+        Classify into Learning, Building, Planning, or Unknown
+        
+        Uses keyword matching to determine the primary intent category.
+        Returns Unknown if no keywords match.
+        
+        Args:
+            input_lower (str): Lowercased user input
+            
+        Returns:
+            str: Intent type classification
+        """
         learning_score = sum(1 for kw in self.learning_keywords if kw in input_lower)
         building_score = sum(1 for kw in self.building_keywords if kw in input_lower)
         planning_score = sum(1 for kw in self.planning_keywords if kw in input_lower)
@@ -80,7 +104,18 @@ class IntentClassificationEngine:
             return "Planning"
     
     def _extract_primary_goal(self, user_input):
-        """Extract the ultimate objective as one clear sentence"""
+        """
+        Extract the ultimate objective as one clear sentence
+        
+        Identifies the main goal from the input by selecting the first
+        substantial sentence (minimum 4 words).
+        
+        Args:
+            user_input (str): Original user input (preserves case)
+            
+        Returns:
+            str: Primary goal statement
+        """
         # Split into sentences
         sentences = re.split(r'[.!?]+', user_input)
         sentences = [s.strip() for s in sentences if s.strip()]
