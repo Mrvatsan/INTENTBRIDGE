@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntentBridge - Intent Classification Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>IntentBridge</h1>
+            <p class="subtitle">Intent Classification Engine</p>
+            <p class="description">Convert raw human intent into structured, machine-usable representations</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <label for="userInput">Enter your raw intent:</label>
+                <textarea 
+                    id="userInput" 
+                    placeholder="Example: I want to learn machine learning but I'm a beginner and I only have 3 months..."
+                    rows="6"
+                ></textarea>
+                <button id="classifyBtn" onclick="classifyIntent()">Classify Intent</button>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Processing intent...</p>
+            </div>
+
+            <div id="results" class="results hidden">
+                <h2>Structured Intent Output</h2>
+                
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h3>Intent Type</h3>
+                        <p id="intentType" class="value"></p>
+                    </div>
+
+                    <div class="result-item">
+                        <h3>Confidence Level</h3>
+                        <p id="confidenceLevel" class="value"></p>
+                    </div>
+
+                    <div class="result-item">
+                        <h3>Emotional Signal</h3>
+                        <p id="emotionalSignal" class="value"></p>
+                    </div>
+                </div>
+
+                <div class="result-item full-width">
+                    <h3>Primary Goal</h3>
+                    <p id="primaryGoal" class="value"></p>
+                </div>
+
+                <div class="result-item full-width">
+                    <h3>Secondary Goals</h3>
+                    <ul id="secondaryGoals" class="list"></ul>
+                </div>
+
+                <div class="result-item full-width">
+                    <h3>Constraints</h3>
+                    <ul id="constraints" class="list"></ul>
+                </div>
+
+                <div class="result-item full-width">
+                    <h3>Ambiguities</h3>
+                    <ul id="ambiguities" class="list"></ul>
+                </div>
+
+                <div class="json-output">
+                    <h3>Raw JSON Output</h3>
+                    <button onclick="copyJSON()" class="copy-btn">Copy JSON</button>
+                    <pre id="jsonOutput"></pre>
+                </div>
+            </div>
+
+            <div id="error" class="error hidden">
+                <h3>Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>IntentBridge v1.0.0 | Module 1: Intent Classification Engine</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
