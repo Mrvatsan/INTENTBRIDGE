@@ -3,28 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IntentBridge - Convert raw human intent into structured, machine-usable JSON representations">
+    <meta name="author" content="IntentBridge Team">
     <title>IntentBridge - Intent Classification Engine</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Main application container -->
     <div class="container">
+        <!-- Header section with branding and description -->
         <header>
             <h1>IntentBridge</h1>
             <p class="subtitle">Intent Classification Engine</p>
             <p class="description">Convert raw human intent into structured, machine-usable representations</p>
         </header>
 
+        <!-- Main content area -->
         <main>
+            <!-- User input section -->
             <div class="input-section">
                 <label for="userInput">Enter your raw intent:</label>
                 <textarea 
                     id="userInput" 
                     placeholder="Example: I want to learn machine learning but I'm a beginner and I only have 3 months..."
                     rows="6"
+                    aria-label="Intent input text area"
                 ></textarea>
                 <button id="classifyBtn" onclick="classifyIntent()">Classify Intent</button>
             </div>
 
+            <!-- Loading indicator (hidden by default) -->
             <div id="loading" class="loading hidden">
                 <div class="spinner"></div>
                 <p>Processing intent...</p>
