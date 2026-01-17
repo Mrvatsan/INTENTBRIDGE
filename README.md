@@ -4,6 +4,14 @@
 
 A web-based system that processes raw, unstructured human intent into structured, resolved representations.
 
+## 📁 Project Structure
+
+- `app.py`: Core Flask application with Module 1 and Module 2 engines.
+- `constants.py`: Centralized application constants and configuration.
+- `static/`: Frontend assets (JavaScript logic and CSS styles).
+- `templates/`: HTML templates for the web interface.
+- `requirements.txt`: Python package dependencies.
+
 ## 🎯 Overview
 
 IntentBridge is a multi-stage pipeline designed to analyze human input and extract precise, machine-usable data. It currently consists of two modules:
