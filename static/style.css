@@ -152,8 +152,14 @@ button:disabled {
 
 .results h2 {
     font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-    color: var(--text);
+    margin-bottom: 2rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.understanding-section {
+    margin-bottom: 3rem;
 }
 
 .result-grid {
@@ -233,18 +239,87 @@ button:disabled {
     font-style: italic;
 }
 
+.resolution-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.resolution-container {
+    padding: 1.5rem;
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary);
+}
+
+.question-text {
+    font-size: 1.2rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+.hint-text {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+.badge-clarificationrequired {
+    background-color: var(--warning);
+    color: #fff;
+}
+
+.badge-assumptionsmade {
+    background-color: var(--success);
+    color: #fff;
+}
+
+.badge-neutral {
+    background-color: var(--secondary);
+    color: #fff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .json-output {
     margin-top: 2rem;
+}
+
+.json-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #e2e8f0;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.json-header:hover {
+    background: #cbd5e1;
+}
+
+.json-content {
     background: #1e293b;
     padding: 1.5rem;
     border-radius: 0.5rem;
     position: relative;
+    animation: slideDown 0.3s ease-out;
 }
 
-.json-output h3 {
-    color: #e2e8f0;
-    margin-bottom: 1rem;
-    font-size: 1rem;
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .copy-btn {

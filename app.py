@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import re
 import logging
+import constants
 
 # Configure logging for debugging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -102,16 +103,16 @@ class IntentClassificationEngine:
         planning_score = sum(1 for kw in self.planning_keywords if kw in input_lower)
         
         if learning_score == 0 and building_score == 0 and planning_score == 0:
-            return "Unknown"
+            return constants.INTENT_UNKNOWN
         
         max_score = max(learning_score, building_score, planning_score)
         
         if learning_score == max_score:
-            return "Learning"
+            return constants.INTENT_LEARNING
         elif building_score == max_score:
-            return "Building"
+            return constants.INTENT_BUILDING
         else:
-            return "Planning"
+            return constants.INTENT_PLANNING
     
     def _extract_primary_goal(self, user_input):
         """
@@ -135,7 +136,7 @@ class IntentClassificationEngine:
         
         # Take the first substantial sentence as primary goal
         for sentence in sentences:
-            if len(sentence.split()) > 3:  # At least 4 words
+            if len(sentence.split()) > (constants.MIN_SENTENCE_LENGTH - 1):
                 return sentence
         
         return sentences[0] if sentences else "No clear goal identified"
@@ -152,7 +153,7 @@ class IntentClassificationEngine:
             
             if len(sentences) > 1:
                 for i, sentence in enumerate(sentences[1:], 1):
-                    if len(sentence.split()) > 3:
+                    if len(sentence.split()) > (constants.MIN_SENTENCE_LENGTH - 1):
                         secondary.append(sentence)
         
         return secondary
@@ -210,23 +211,23 @@ class IntentClassificationEngine:
         curious_score = sum(1 for signal in self.curious_signals if signal in input_lower)
         
         scores = {
-            'Confused': confused_score,
-            'Motivated': motivated_score,
-            'Stressed': stressed_score,
-            'Curious': curious_score
+            constants.EMOTION_CONFUSED: confused_score,
+            constants.EMOTION_MOTIVATED: motivated_score,
+            constants.EMOTION_STRESSED: stressed_score,
+            constants.EMOTION_CURIOUS: curious_score
         }
         
         max_score = max(scores.values())
         
         if max_score == 0:
-            return "Neutral"
+            return constants.EMOTION_NEUTRAL
         
         # Return the emotion with highest score
         for emotion, score in scores.items():
             if score == max_score:
                 return emotion
         
-        return "Neutral"
+        return constants.EMOTION_NEUTRAL
     
     def _calculate_confidence(self, user_input, primary_goal, ambiguities):
         """Calculate confidence level: Low, Medium, or High"""
@@ -234,31 +235,115 @@ class IntentClassificationEngine:
         ambiguity_count = len(ambiguities)
         
         # High confidence criteria
-        if word_count >= 15 and ambiguity_count <= 1 and primary_goal != "No clear goal identified":
-            return "High"
+        if word_count >= constants.MIN_WORD_COUNT_HIGH_CONFIDENCE and ambiguity_count <= constants.MAX_AMBIGUITY_HIGH_CONFIDENCE and primary_goal != "No clear goal identified":
+            return constants.CONFIDENCE_HIGH
         
         # Low confidence criteria
-        if word_count < 8 or ambiguity_count >= 3 or primary_goal == "No clear goal identified":
-            return "Low"
+        if word_count < constants.MIN_WORD_COUNT_LOW_CONFIDENCE or ambiguity_count >= constants.MIN_AMBIGUITY_LOW_CONFIDENCE or primary_goal == "No clear goal identified":
+            return constants.CONFIDENCE_LOW
         
         # Medium by default
-        return "Medium"
+        return constants.CONFIDENCE_MEDIUM
     
     def _empty_response(self):
         """Return empty structured response"""
         return {
-            "intent_type": "Unknown",
+            "intent_type": constants.INTENT_UNKNOWN,
             "primary_goal": "No input provided",
             "secondary_goals": [],
             "constraints": [],
             "ambiguities": ["No input provided"],
-            "emotional_signal": "Neutral",
-            "confidence_level": "Low"
+            "emotional_signal": constants.EMOTION_NEUTRAL,
+            "confidence_level": constants.CONFIDENCE_LOW
         }
 
 
-# Initialize the engine
-engine = IntentClassificationEngine()
+class AmbiguityResolutionEngine:
+    """
+    Ambiguity Resolution Engine - Module 2 of IntentBridge
+    Resolves ambiguities in intent objects through clarification or neutral assumptions.
+    """
+
+    def __init__(self):
+        # Define which ambiguities are considered blocking
+        self.blocking_ambiguities = [
+            "Input too brief - scope unclear",
+            "Goal contains vague or undefined elements",
+            "Target level unknown",
+            "Domain baseline unknown"
+        ]
+        
+        # Mapping of ambiguity types to default operating assumptions
+        self.assumption_map = {
+            "Time availability undefined or vague": "Standard part-time availability (10-15 hours/week) is assumed.",
+            "Subjective quality terms used without specific criteria": "Standard professional benchmarks for quality will be applied.",
+            "Input too brief - scope unclear": "A standard introductory scope for the identified domain is assumed.",
+            "Goal contains vague or undefined elements": "The most common interpretation of the stated goal will be used.",
+            "No input provided": "Fundamental introductory concepts are assumed as a starting point."
+        }
+
+    def resolve(self, intent_object):
+        """
+        Execute the ambiguity resolution logic
+        
+        Args:
+            intent_object (dict): The output from Module 1
+            
+        Returns:
+            dict: Resolution object with type, question, and assumptions
+        """
+        ambiguities = intent_object.get("ambiguities", [])
+        
+        if not ambiguities:
+            return {
+                "resolution_type": constants.RES_ASSUMPTIONS,
+                "clarification_question": "",
+                "assumptions": ["Proceeding with the primary goal as stated with no further assumptions required."]
+            }
+
+        # STEP 2: Determine if any ambiguity is BLOCKING
+        blocking_found = [a for a in ambiguities if a in self.blocking_ambiguities or "time" in a.lower()]
+        
+        if blocking_found:
+            # STEP 3: Select the SINGLE most critical ambiguity (first one found)
+            critical = blocking_found[0]
+            question = self._generate_clarification_question(critical, intent_object)
+            
+            return {
+                "resolution_type": constants.RES_CLARIFICATION,
+                "clarification_question": question,
+                "assumptions": []
+            }
+        else:
+            # STEP 4: Generate explicit assumptions for each ambiguity
+            assumptions = []
+            for ambiguity in ambiguities:
+                assumption = self.assumption_map.get(ambiguity, f"A neutral, standard interpretation for '{ambiguity}' is assumed.")
+                assumptions.append(assumption)
+            
+            return {
+                "resolution_type": constants.RES_ASSUMPTIONS,
+                "clarification_question": "",
+                "assumptions": assumptions
+            }
+
+    def _generate_clarification_question(self, ambiguity, intent_object):
+        """Generate a concise clarification question for blocking ambiguities"""
+        if "time" in ambiguity.lower():
+            return "How many hours per week can you realistically dedicate to this goal?"
+        elif "scope" in ambiguity.lower() or "too brief" in ambiguity.lower():
+            return "Could you provide more detail regarding the specific scope or deliverables you have in mind?"
+        elif "goal" in ambiguity.lower() or "vague" in ambiguity.lower():
+            return "Could you specifically define the primary outcome you expect to achieve?"
+        elif "level" in ambiguity.lower():
+            return "What is your current proficiency level or target level for this objective?"
+        else:
+            return f"Could you provide more specific information regarding {ambiguity.lower()}?"
+
+
+# Initialize the engines
+classification_engine = IntentClassificationEngine()
+resolution_engine = AmbiguityResolutionEngine()
 
 
 @app.route('/')
@@ -267,7 +352,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/api/classify', methods=['POST'])
+@app.route(constants.API_CLASSIFY_ENDPOINT, methods=['POST'])
 def classify_intent():
     """
     API endpoint for intent classification
@@ -283,7 +368,7 @@ def classify_intent():
             }), 400
         
         user_input = data['user_input']
-        result = engine.classify(user_input)
+        result = classification_engine.classify(user_input)
         
         return jsonify(result), 200
         
@@ -293,15 +378,48 @@ def classify_intent():
         }), 500
 
 
-@app.route('/health', methods=['GET'])
+@app.route(constants.API_RESOLVE_ENDPOINT, methods=['POST'])
+def resolve_ambiguity():
+    """
+    API endpoint for ambiguity resolution
+    Expects JSON: { "intent_type": "...", "primary_goal": "...", ... }
+    Returns: Resolution JSON
+    """
+    try:
+        intent_object = request.get_json()
+        
+        if not intent_object:
+            return jsonify({
+                "error": "Missing intent object in request body"
+            }), 400
+        
+        # Validate minimal schema
+        required_fields = ["intent_type", "primary_goal", "ambiguities"]
+        for field in required_fields:
+            if field not in intent_object:
+                return jsonify({
+                    "error": f"Missing required field '{field}' in intent object"
+                }), 400
+
+        result = resolution_engine.resolve(intent_object)
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({
+            "error": f"Internal error: {str(e)}"
+        }), 500
+
+
+@app.route(constants.API_HEALTH_ENDPOINT, methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({
         "status": "healthy",
-        "module": "Intent Classification Engine",
-        "version": "1.0.0"
+        "modules": [constants.MODULE_1_NAME, constants.MODULE_2_NAME],
+        "version": constants.APP_VERSION
     }), 200
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=constants.DEBUG_MODE, host=constants.DEFAULT_HOST, port=constants.DEFAULT_PORT)

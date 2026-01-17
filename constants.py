@@ -5,8 +5,9 @@ Contains application-wide constant values used across modules
 
 # Application metadata
 APP_NAME = 'IntentBridge'
-APP_VERSION = '1.0.0'
-MODULE_NAME = 'Intent Classification Engine'
+APP_VERSION = '1.1.0'
+MODULE_1_NAME = 'Intent Classification Engine'
+MODULE_2_NAME = 'Ambiguity Resolution Engine'
 
 # Intent type constants
 INTENT_LEARNING = 'Learning'
@@ -33,8 +34,13 @@ MAX_AMBIGUITY_HIGH_CONFIDENCE = 1
 MIN_AMBIGUITY_LOW_CONFIDENCE = 3
 MIN_SENTENCE_LENGTH = 4  # Minimum words for a substantial sentence
 
+# Resolution type constants
+RES_CLARIFICATION = 'ClarificationRequired'
+RES_ASSUMPTIONS = 'AssumptionsMade'
+
 # API endpoints
 API_CLASSIFY_ENDPOINT = '/api/classify'
+API_RESOLVE_ENDPOINT = '/api/resolve'
 API_HEALTH_ENDPOINT = '/health'
 
 # Server configuration

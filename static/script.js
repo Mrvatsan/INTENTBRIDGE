@@ -36,12 +36,76 @@ async function classifyIntent() {
         
         displayResults(data);
         
+        // Orchestration Logic: Module 2 runs ONLY if ambiguities exist
+        if (data.ambiguities && data.ambiguities.length > 0) {
+            await resolveAmbiguity(data);
+        } else {
+            document.getElementById('resolutionResults').classList.add('hidden');
+        }
+        
     } catch (error) {
         showError(error.message);
     } finally {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('classifyBtn').disabled = false;
     }
+}
+
+/**
+ * Stage 2: Resolve ambiguities in the classified intent
+ * Calls the resolution API and displays either a question or assumptions
+ * 
+ * @param {Object} intentData - The output from Module 1
+ */
+async function resolveAmbiguity(intentData) {
+    try {
+        const response = await fetch('/api/resolve', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(intentData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.error('Resolution failed:', data.error);
+            return;
+        }
+        
+        displayResolution(data);
+        
+    } catch (error) {
+        console.error('Error in resolution stage:', error);
+    }
+}
+
+/**
+ * Display resolution results in the UI
+ * 
+ * @param {Object} data - Resolution object from Module 2
+ */
+function displayResolution(data) {
+    const resolutionDiv = document.getElementById('resolutionResults');
+    const questionContainer = document.getElementById('questionContainer');
+    const assumptionsContainer = document.getElementById('assumptionsContainer');
+    const resolutionType = document.getElementById('resolutionType');
+    
+    resolutionType.textContent = data.resolution_type;
+    resolutionType.className = `value badge badge-${data.resolution_type.toLowerCase()}`;
+    
+    if (data.resolution_type === 'ClarificationRequired') {
+        questionContainer.classList.remove('hidden');
+        assumptionsContainer.classList.add('hidden');
+        document.getElementById('clarificationQuestion').textContent = data.clarification_question;
+    } else {
+        questionContainer.classList.add('hidden');
+        assumptionsContainer.classList.remove('hidden');
+        renderListSection('assumptionsList', 'assumptionsContainer', data.assumptions);
+    }
+    
+    resolutionDiv.classList.remove('hidden');
 }
 
 /**
@@ -63,10 +127,10 @@ function displayResults(data) {
     
     document.getElementById('primaryGoal').textContent = data.primary_goal;
     
-    // Populate lists
-    populateList('secondaryGoals', data.secondary_goals);
-    populateList('constraints', data.constraints);
-    populateList('ambiguities', data.ambiguities);
+    // Populate lists with conditional rendering
+    renderListSection('secondaryGoals', 'secondaryGoalsSection', data.secondary_goals);
+    renderListSection('constraints', 'constraintsSection', data.constraints);
+    renderListSection('ambiguities', 'ambiguitiesSection', data.ambiguities);
     
     // Display JSON
     document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
@@ -76,28 +140,43 @@ function displayResults(data) {
 }
 
 /**
- * Populate a list element with items or show "None" if empty
+ * Conditionally render a list section based on item count
  * 
- * @param {string} elementId - ID of the list element to populate
- * @param {Array} items - Array of items to display
+ * @param {string} listId - ID of the UL element
+ * @param {string} sectionId - ID of the container DIV element
+ * @param {Array} items - Array of items to check
  */
-function populateList(elementId, items) {
-    const listElement = document.getElementById(elementId);
-    listElement.innerHTML = '';
+function renderListSection(listId, sectionId, items) {
+    const listElement = document.getElementById(listId);
+    const sectionElement = document.getElementById(sectionId);
     
-    if (!items || items.length === 0) {
-        // Display placeholder for empty lists
-        const li = document.createElement('li');
-        li.textContent = 'None';
-        li.className = 'empty';
-        listElement.appendChild(li);
-    } else {
-        // Create list item for each entry
+    if (items && items.length > 0) {
+        listElement.innerHTML = '';
         items.forEach(item => {
             const li = document.createElement('li');
             li.textContent = item;
             listElement.appendChild(li);
         });
+        sectionElement.classList.remove('hidden');
+    } else {
+        sectionElement.classList.add('hidden');
+    }
+}
+
+/**
+ * Toggle visibility of the Raw JSON section
+ */
+function toggleJson() {
+    const wrapper = document.getElementById('jsonWrapper');
+    const icon = document.getElementById('jsonToggleIcon');
+    const isHidden = wrapper.classList.contains('hidden');
+    
+    if (isHidden) {
+        wrapper.classList.remove('hidden');
+        icon.textContent = '▼';
+    } else {
+        wrapper.classList.add('hidden');
+        icon.textContent = '▶';
     }
 }
 
@@ -106,7 +185,7 @@ function showError(message) {
     document.getElementById('error').classList.remove('hidden');
 }
 
-function copyJSON() {
+function copyJSON(event) {
     const jsonText = document.getElementById('jsonOutput').textContent;
     navigator.clipboard.writeText(jsonText).then(() => {
         const btn = event.target;

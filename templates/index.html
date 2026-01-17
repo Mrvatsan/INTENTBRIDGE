@@ -14,8 +14,8 @@
         <!-- Header section with branding and description -->
         <header>
             <h1>IntentBridge</h1>
-            <p class="subtitle">Intent Classification Engine</p>
-            <p class="description">Convert raw human intent into structured, machine-usable representations</p>
+            <p class="subtitle">Modular Intent Processing Pipeline</p>
+            <p class="description">A transparent, modular system for refining human intent into structured representations</p>
         </header>
 
         <!-- Main content area -->
@@ -39,49 +39,75 @@
             </div>
 
             <div id="results" class="results hidden">
-                <h2>Structured Intent Output</h2>
-                
-                <div class="result-grid">
-                    <div class="result-item">
-                        <h3>Intent Type</h3>
-                        <p id="intentType" class="value"></p>
+                <section class="understanding-section">
+                    <h2>What We Understood</h2>
+                    
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <h3>Intent Type</h3>
+                            <p id="intentType" class="value"></p>
+                        </div>
+
+                        <div class="result-item">
+                            <h3>Confidence Level</h3>
+                            <p id="confidenceLevel" class="value"></p>
+                        </div>
+
+                        <div class="result-item">
+                            <h3>Emotional Signal</h3>
+                            <p id="emotionalSignal" class="value"></p>
+                        </div>
                     </div>
 
-                    <div class="result-item">
-                        <h3>Confidence Level</h3>
-                        <p id="confidenceLevel" class="value"></p>
+                    <div class="result-item full-width">
+                        <h3>Primary Goal</h3>
+                        <p id="primaryGoal" class="value"></p>
                     </div>
 
-                    <div class="result-item">
-                        <h3>Emotional Signal</h3>
-                        <p id="emotionalSignal" class="value"></p>
+                    <div id="secondaryGoalsSection" class="result-item full-width hidden">
+                        <h3>Secondary Goals</h3>
+                        <ul id="secondaryGoals" class="list"></ul>
                     </div>
-                </div>
 
-                <div class="result-item full-width">
-                    <h3>Primary Goal</h3>
-                    <p id="primaryGoal" class="value"></p>
-                </div>
+                    <div id="constraintsSection" class="result-item full-width hidden">
+                        <h3>Constraints</h3>
+                        <ul id="constraints" class="list"></ul>
+                    </div>
 
-                <div class="result-item full-width">
-                    <h3>Secondary Goals</h3>
-                    <ul id="secondaryGoals" class="list"></ul>
-                </div>
+                    <div id="ambiguitiesSection" class="result-item full-width hidden">
+                        <h3>Ambiguities</h3>
+                        <ul id="ambiguities" class="list"></ul>
+                    </div>
+                </section>
 
-                <div class="result-item full-width">
-                    <h3>Constraints</h3>
-                    <ul id="constraints" class="list"></ul>
-                </div>
+                <!-- Resolution Engine Section (Module 2) -->
+                <section id="resolutionResults" class="resolution-section hidden">
+                    <h2 id="resolutionHeader">What We Need to Proceed</h2>
+                    <div class="resolution-container">
+                        <div id="resolutionTypeItem" class="result-item">
+                            <h3>Resolution Strategy</h3>
+                            <p id="resolutionType" class="value badge badge-neutral"></p>
+                        </div>
 
-                <div class="result-item full-width">
-                    <h3>Ambiguities</h3>
-                    <ul id="ambiguities" class="list"></ul>
-                </div>
+                        <div id="questionContainer" class="result-item hidden">
+                            <h3>Clarification Required</h3>
+                            <p id="clarificationQuestion" class="value question-text"></p>
+                            <p class="hint-text">Please refine your intent in the text area above and re-submit.</p>
+                        </div>
+
+                        <div id="assumptionsContainer" class="result-item hidden">
+                            <h3>Default Operating Assumptions</h3>
+                            <ul id="assumptionsList" class="list"></ul>
+                        </div>
+                    </div>
+                </section>
 
                 <div class="json-output">
-                    <h3>Raw JSON Output</h3>
-                    <button onclick="copyJSON()" class="copy-btn">Copy JSON</button>
-                    <pre id="jsonOutput"></pre>
+                    <h3 onclick="toggleJson()" class="json-header">Raw JSON <span id="jsonToggleIcon">▶</span></h3>
+                    <div id="jsonWrapper" class="json-content hidden">
+                        <button onclick="copyJSON(event)" class="copy-btn">Copy JSON</button>
+                        <pre id="jsonOutput" readonly></pre>
+                    </div>
                 </div>
             </div>
 
@@ -92,7 +118,7 @@
         </main>
 
         <footer>
-            <p>IntentBridge v1.0.0 | Module 1: Intent Classification Engine</p>
+            <p>IntentBridge v1.1.0 | Modular Intent Pipeline</p>
         </footer>
     </div>
 

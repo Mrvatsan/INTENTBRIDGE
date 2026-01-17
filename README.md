@@ -1,27 +1,48 @@
 # IntentBridge
 
-**Intent Classification Engine - Module 1**
+**Modular Intent Processing Pipeline**
 
-A web-based application that converts raw, unstructured human intent into structured, machine-usable representations.
+A web-based system that processes raw, unstructured human intent into structured, resolved representations.
 
 ## 🎯 Overview
 
-IntentBridge is NOT a chatbot. It is a sophisticated system that analyzes raw human input and extracts precise, structured representations of user intent through an 8-step classification process. This is Module 1 of the IntentBridge pipeline - the Intent Classification Engine.
+IntentBridge is a multi-stage pipeline designed to analyze human input and extract precise, machine-usable data. It currently consists of two modules:
+
+1.  **Intent Classification Engine (Module 1)**: Converts raw input into a structured JSON representation (Intent Type, Goals, Constraints, Ambiguities, Emotions).
+2.  **Ambiguity Resolution Engine (Module 2)**: Processes the output of Module 1 to resolve ambiguities through either targeted clarification questions or neutral assumptions.
 
 ### What makes IntentBridge different?
-- **No conversational AI** - Pure intent extraction without suggestions or advice
-- **Structured output** - JSON-based machine-readable format
-- **Multi-dimensional analysis** - Intent type, goals, constraints, ambiguities, and emotional signals
-- **Confidence scoring** - Transparent quality assessment of classification results
+- **No conversational AI** - Pure intent extraction and refinement without suggestions or advice.
+- **Structured output** - Fully valid JSON machine-readable formats.
+- **Disciplined Resolution** - Follows strict logic to decide between asking questions or making assumptions.
+- **Multi-dimensional analysis** - Covers intent type, goals, constraints, ambiguities, and emotional signals.
 
 ## Features
 
-- **Intent Type Classification**: Learning, Building, Planning, or Unknown
+### Module 1: Classification
+- **Intent Type**: Learning, Building, Planning, or Unknown
 - **Goal Extraction**: Primary and secondary objectives
 - **Constraint Detection**: Skill limitations, time limits, resources
 - **Ambiguity Identification**: Missing or vague information
 - **Emotional Signal Detection**: Confused, Motivated, Stressed, Curious, Neutral
 - **Confidence Scoring**: Low, Medium, High
+
+### Module 2: Resolution
+- **Blocking Detection**: Identifies if ambiguities prevent action planning.
+- **Clarification Generation**: Selects the single most critical blocking ambiguity and generates one precise question.
+- **Assumption Modeling**: Generates reasonable, neutral assumptions for non-blocking ambiguities.
+
+## API Specification
+
+### 1. Intent Classification
+- **Endpoint**: `/api/classify`
+- **Method**: `POST`
+- **Payload**: `{ "user_input": "string" }`
+
+### 2. Ambiguity Resolution
+- **Endpoint**: `/api/resolve`
+- **Method**: `POST`
+- **Payload**: Structured intent object from Module 1.
 
 ## Installation
 
