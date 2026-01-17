@@ -4,7 +4,7 @@ Contains application-wide constant values used across modules
 """
 
 # Application metadata
-APP_NAME = 'IntentBridge'
+APP_NAME    = 'IntentBridge'
 APP_VERSION = '1.1.0'
 MODULE_1_NAME = 'Intent Classification Engine'
 MODULE_2_NAME = 'Ambiguity Resolution Engine'
@@ -13,7 +13,7 @@ MODULE_2_NAME = 'Ambiguity Resolution Engine'
 INTENT_LEARNING = 'Learning'
 INTENT_BUILDING = 'Building'
 INTENT_PLANNING = 'Planning'
-INTENT_UNKNOWN = 'Unknown'
+INTENT_UNKNOWN  = 'Unknown'
 
 # Confidence level constants
 CONFIDENCE_HIGH = 'High'
