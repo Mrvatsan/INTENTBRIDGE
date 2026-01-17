@@ -53,6 +53,7 @@ async function classifyIntent() {
 
 /**
  * Stage 2: Resolve ambiguities in the classified intent
+ * @apiNote This stage is only triggered if ambiguities are detected in Stage 1.
  * Calls the resolution API and displays either a question or assumptions
  * 
  * @param {Object} intentData - The output from Module 1
