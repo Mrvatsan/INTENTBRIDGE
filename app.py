@@ -51,26 +51,26 @@ class IntentClassificationEngine:
         logger.info(f"Starting classification for input of length {len(user_input)}")
         input_lower = user_input.lower()
         
-        # STEP 2: Determine intent type
+        # STEP 2: Determine intent type (Learning, Building, Planning)
         intent_type = self._classify_intent_type(input_lower)
         logger.debug(f"Intent type classified as: {intent_type}")
         
-        # STEP 3: Extract primary goal
+        # STEP 3: Extract primary goal from the first substantial sentence
         primary_goal = self._extract_primary_goal(user_input)
         
-        # STEP 4: Identify secondary goals
+        # STEP 4: Identify secondary goals from remaining context
         secondary_goals = self._extract_secondary_goals(user_input)
         
-        # STEP 5: Extract constraints
+        # STEP 5: Extract explicit constraints (Time, Skill, Budget)
         constraints = self._extract_constraints(user_input, input_lower)
         
-        # STEP 6: Detect ambiguities
+        # STEP 6: Detect ambiguities requiring refinement
         ambiguities = self._detect_ambiguities(user_input, input_lower)
         
-        # STEP 7: Detect emotional signal
+        # STEP 7: Detect emotional signal based on keyword sentiment
         emotional_signal = self._detect_emotion(input_lower)
         
-        # STEP 8: Assign confidence level
+        # STEP 8: Assign confidence level (Low, Medium, or High)
         confidence_level = self._calculate_confidence(user_input, primary_goal, ambiguities)
         
         logger.info(f"Classification complete: {intent_type} | {confidence_level} confidence | {emotional_signal}")
