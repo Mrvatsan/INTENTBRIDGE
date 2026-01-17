@@ -44,6 +44,10 @@ IntentBridge is a multi-stage pipeline designed to analyze human input and extra
 - **Method**: `POST`
 - **Payload**: Structured intent object from Module 1.
 
+## 🧠 Philosophy
+
+IntentBridge operates on the principle of **Decision Transparency**. Unlike standard conversational AIs that may "hallucinate" or make invisible choices, IntentBridge explicitly identifies what it knows and what it needs. Every assumption made by the system is neutral, non-binding, and reversible, ensuring the user remains the ultimate authority in the intent refinement process.
+
 ## Installation
 
 1. **Clone or navigate to the project directory**:
