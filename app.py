@@ -284,13 +284,12 @@ class AmbiguityResolutionEngine:
 
     def resolve(self, intent_object):
         """
-        Execute the ambiguity resolution logic
+        Execute the ambiguity resolution logic via decision tree
         
-        Args:
-            intent_object (dict): The output from Module 1
-            
-        Returns:
-            dict: Resolution object with type, question, and assumptions
+        Logic Overview:
+        1. If no ambiguities: Bypass resolution.
+        2. If blocking ambiguities: Request specific clarification.
+        3. If non-blocking ambiguities: Apply neutral operating assumptions.
         """
         ambiguities = intent_object.get("ambiguities", [])
         
