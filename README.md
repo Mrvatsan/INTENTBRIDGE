@@ -18,12 +18,13 @@ IntentBridge is a multi-stage pipeline designed to analyze human input and extra
 
 1.  **Intent Classification Engine (Module 1)**: Converts raw input into a structured JSON representation (Intent Type, Goals, Constraints, Ambiguities, Emotions).
 2.  **Ambiguity Resolution Engine (Module 2)**: Processes the output of Module 1 to resolve ambiguities through either targeted clarification questions or neutral assumptions.
+3.  **Execution & Action Planning Engine (Module 3)**: Generates concrete, step-by-step execution plans based on resolved intents.
 
 ### What makes IntentBridge different?
 - **No conversational AI** - Pure intent extraction and refinement without suggestions or advice.
 - **Structured output** - Fully valid JSON machine-readable formats.
 - **Disciplined Resolution** - Follows strict logic to decide between asking questions or making assumptions.
-- **Multi-dimensional analysis** - Covers intent type, goals, constraints, ambiguities, and emotional signals.
+- **Actionable Planning** - Moves directly from ambiguity resolution to execution steps.
 
 ## Features
 
@@ -39,6 +40,12 @@ IntentBridge is a multi-stage pipeline designed to analyze human input and extra
 - **Blocking Detection**: Identifies if ambiguities prevent action planning.
 - **Clarification Generation**: Selects the single most critical blocking ambiguity and generates one precise question.
 - **Assumption Modeling**: Generates reasonable, neutral assumptions for non-blocking ambiguities.
+
+### Module 3: Execution Planning
+- **Strategy Selection**: Dynamically matches intent type to execution framework (e.g., Curriculum vs. Roadmap).
+- **Scope Adjustment**: Modifies plan depth based on confidence level.
+- **Constraint Awareness**: Enforces resource and time constraints in the plan steps.
+- **Emotional Adaptation**: Adjusts risk flags and success criteria based on user state.
 
 ## API Specification
 
