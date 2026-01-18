@@ -101,7 +101,33 @@
                         </div>
                     </div>
                 </section>
+                <!-- Plan Section (Module 3) -->
+                <section id="planResults" class="plan-section hidden">
+                    <h2>Execution Plan</h2>
+                    
+                    <div class="result-item full-width">
+                        <h3>Strategy</h3>
+                        <p id="strategyValue" class="value"></p>
+                    </div>
 
+                    <div id="stepsList" class="steps-timeline"></div>
+
+                    <div class="grid-2">
+                        <div id="riskSection" class="result-item hidden">
+                            <h3>⚠️ Risk Flags</h3>
+                            <ul id="riskList" class="list"></ul>
+                        </div>
+                        <div id="successSection" class="result-item hidden">
+                            <h3>✅ Success Criteria</h3>
+                            <ul id="successList" class="list"></ul>
+                        </div>
+                    </div>
+
+                    <div id="resourceSection" class="result-item full-width hidden">
+                        <h3>Tools & Resources</h3>
+                        <ul id="resourceList" class="list"></ul>
+                    </div>
+                </section>
                 <div class="json-output">
                     <h3 onclick="toggleJson()" class="json-header">Raw JSON <span id="jsonToggleIcon">▶</span></h3>
                     <div id="jsonWrapper" class="json-content hidden">

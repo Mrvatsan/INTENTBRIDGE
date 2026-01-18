@@ -77,8 +77,45 @@ async function resolveAmbiguity(intentData) {
         
         displayResolution(data);
         
+        // Orchestration Logic: Module 3 runs if resolution is AssumptionsMade (or effectively successful)
+        // If it was ClarificationRequired, we stop.
+        if (data.resolution_type === 'AssumptionsMade') {
+             // Merge resolution data back into intentData for the final plan
+             // We need to pass the FULL context to Module 3
+             const fullContext = { ...intentData, ...data };
+             await generateExecutionPlan(fullContext);
+        }
+        
     } catch (error) {
         console.error('Error in resolution stage:', error);
+    }
+}
+
+/**
+ * Stage 3: Generate Execution Plan
+ * Calls the planning API and displays the final roadmap
+ */
+async function generateExecutionPlan(resolvedIntent) {
+    try {
+        const response = await fetch('/api/plan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resolvedIntent)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.error('Planning failed:', data.error);
+            return;
+        }
+        
+        displayPlan(data);
+        
+    } catch (error) {
+        console.error('Error in planning stage:', error);
     }
 }
 
@@ -162,6 +199,41 @@ function renderListSection(listId, sectionId, items) {
     } else {
         sectionElement.classList.add('hidden');
     }
+}
+
+function displayPlan(data) {
+    const planSection = document.getElementById('planResults'); // Needs to be added to HTML
+    if (!planSection) return; // Guard clause if HTML not updated yet
+
+    planSection.classList.remove('hidden');
+    
+    // Strategy
+    document.getElementById('strategyValue').textContent = data.execution_strategy;
+    
+    // Risks
+    renderListSection('riskList', 'riskSection', data.risk_flags);
+    
+    // Success Criteria
+    renderListSection('successList', 'successSection', data.success_criteria);
+    
+    // Resources
+    renderListSection('resourceList', 'resourceSection', data.suggested_tools_or_resources);
+    
+    // Steps
+    const stepList = document.getElementById('stepsList');
+    stepList.innerHTML = '';
+    data.recommended_next_steps.forEach(step => {
+        const div = document.createElement('div');
+        div.className = 'step-card';
+        div.innerHTML = `
+            <div class="step-num">${step.step}</div>
+            <div class="step-content">
+                <h4>${step.action}</h4>
+                <p>${step.rationale}</p>
+            </div>
+        `;
+        stepList.appendChild(div);
+    });
 }
 
 /**
