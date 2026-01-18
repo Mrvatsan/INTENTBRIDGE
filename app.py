@@ -340,9 +340,168 @@ class AmbiguityResolutionEngine:
             return f"Could you provide more specific information regarding {ambiguity.lower()}?"
 
 
+class ExecutionPlanningEngine:
+    """
+    Execution & Action Planning Engine - Module 3 of IntentBridge
+    Detailed execution planning based on resolved intent.
+    """
+
+    def __init__(self):
+        self.strategies = {
+            constants.INTENT_LEARNING: "Curriculum & skill progression",
+            constants.INTENT_BUILDING: "System design & milestone breakdown",
+            constants.INTENT_PLANNING: "Roadmap & decision sequencing"
+        }
+
+    def generate_plan(self, intent_data):
+        """
+        Generate a structured execution plan
+        """
+        # strict input validation
+        res_type = intent_data.get('resolution_type') or intent_data.get('resolution_status')
+        if res_type == constants.RES_CLARIFICATION or res_type == 'ClarificationRequired':
+            # This module must not run if clarification is needed, but we handle it gracefully
+            return {
+                "error": "Plan generation halted: Clarification required."
+            }
+
+        intent_type = intent_data.get('intent_type')
+        confidence = intent_data.get('confidence_level', constants.CONFIDENCE_MEDIUM)
+        emotion = intent_data.get('emotional_signal', constants.EMOTION_NEUTRAL)
+        constraints = intent_data.get('constraints', [])
+
+        # Step 1: Strategy Selection
+        strategy = self.strategies.get(intent_type, "General Execution Strategy")
+
+        # Step 2: Generate Steps (Logic based on type & confidence)
+        steps = self._get_base_steps(intent_type, confidence)
+        
+        # Step 3: Constraint Awareness
+        # In a real system this would filter steps. Here we simply append a constraint verification step.
+        if constraints:
+            steps.insert(0, {
+                "step": 0, 
+                "action": "Review Constraints", 
+                "rationale": f"Ensure plan respects: {', '.join(constraints)}"
+            })
+            # Renumber
+            for i, s in enumerate(steps, 1):
+                s['step'] = i
+
+        # Step 4: Emotional Signal Adaptation
+        # We assume the base steps are neutral. We can't easily rewrite strings without an LLM,
+        # but we can adjust the risk flags or success criteria to match the tone.
+        
+        return {
+            "execution_strategy": strategy,
+            "recommended_next_steps": steps,
+            "suggested_tools_or_resources": self._get_resources(intent_type, constraints),
+            "risk_flags": self._get_risk_flags(confidence, constraints, emotion),
+            "success_criteria": self._get_success_criteria(intent_type, confidence)
+        }
+
+    def _get_base_steps(self, intent_type, confidence):
+        # Simplified rule-based step generation
+        steps = []
+        if intent_type == constants.INTENT_LEARNING:
+            if confidence == constants.CONFIDENCE_LOW:
+                steps = [
+                    {"step": 1, "action": "Identify Core Concepts", "rationale": "Break down the topic into 3-5 fundamental pillars."},
+                    {"step": 2, "action": "Locate Beginner Resources", "rationale": "Find 1 high-quality primer or video to get an overview."},
+                    {"step": 3, "action": "Define First Milestone", "rationale": "Set a very small, achievable goal to build momentum."}
+                ]
+            elif confidence == constants.CONFIDENCE_HIGH:
+                steps = [
+                    {"step": 1, "action": "Select Advanced Curriculum", "rationale": "Choose a comprehensive resource that covers depth."},
+                    {"step": 2, "action": "Schedule Deep Work Sessions", "rationale": "Allocate significant time blocks for complex topics."},
+                    {"step": 3, "action": "Apply Knowledge Projects", "rationale": "Build something concrete to test understanding."}
+                ]
+            else: # Medium
+                steps = [
+                    {"step": 1, "action": "Create Study Plan", "rationale": "Map out what to learn over the next 4 weeks."},
+                    {"step": 2, "action": "Gather Materials", "rationale": "Collect mix of theory (books/docs) and practice (exercises)."},
+                    {"step": 3, "action": "Start with Fundamentals", "rationale": "Spend the first week mastering the basics."}
+                ]
+        elif intent_type == constants.INTENT_BUILDING:
+             if confidence == constants.CONFIDENCE_LOW:
+                steps = [
+                    {"step": 1, "action": "Draft Concept Sketches", "rationale": "Visualize the output without technical constraints."},
+                    {"step": 2, "action": "Research Tools", "rationale": "Find the simplest tools that can achieve the goal."},
+                    {"step": 3, "action": "Build MVP Prototype", "rationale": "Create a 'throwaway' version to test the core idea."}
+                ]
+             elif confidence == constants.CONFIDENCE_HIGH:
+                steps = [
+                    {"step": 1, "action": "Define Architecture", "rationale": "Outline system components and data flow."},
+                    {"step": 2, "action": "Setup Environment", "rationale": "Initialize repo, CI/CD, and dev tools."},
+                    {"step": 3, "action": "Develop Core Modules", "rationale": "Implement the critical path features first."}
+                ]
+             else:
+                steps = [
+                    {"step": 1, "action": "Outline Features", "rationale": "List must-have vs nice-to-have features."},
+                    {"step": 2, "action": "Select Stack", "rationale": "Choose technologies you are reasonably comfortable with."},
+                    {"step": 3, "action": "Start Implementation", "rationale": "Begin coding the most important feature."}
+                ]
+        elif intent_type == constants.INTENT_PLANNING:
+             # Default logic for Planning
+             steps = [
+                {"step": 1, "action": "Brainstorm Options", "rationale": "Divergent thinking to explore all possibilities."},
+                {"step": 2, "action": "Evaluate Constraints", "rationale": "Filter options against time/budget limits."},
+                {"step": 3, "action": "Select Best Path", "rationale": "Commit to one strategy and define next actions."}
+             ]
+        else:
+             steps = [{"step": 1, "action": "Clarify Goal", "rationale": "Intent is unknown, need to define what you want."}]
+
+        return steps
+
+    def _get_resources(self, intent_type, constraints):
+        # Basic mapping
+        resources = []
+        low_budget = any("budget" in c.lower() or "free" in c.lower() for c in constraints)
+        
+        if intent_type == constants.INTENT_LEARNING:
+            resources = ["Online Documentation", "Community Forums"]
+            if low_budget:
+                resources.append("Free YouTube Tutorials")
+                resources.append("Open Source Textbooks")
+            else:
+                resources.append("Paid Courses (Coursera/Udemy)")
+        elif intent_type == constants.INTENT_BUILDING:
+            resources = ["GitHub/GitLab", "StackOverflow"]
+            if low_budget:
+                resources.append("VS Code (Free IDE)")
+                resources.append("Free Tier Cloud Hosting")
+        elif intent_type == constants.INTENT_PLANNING:
+            resources = ["Calendar App", "Note-taking Tool (Notion/Obsidian)"]
+        
+        return resources
+
+    def _get_risk_flags(self, confidence, constraints, emotion):
+        flags = []
+        if confidence == constants.CONFIDENCE_LOW:
+            flags.append("High uncertainty detected - remain flexible.")
+        if emotion == constants.EMOTION_STRESSED:
+            flags.append("Risk of burnout - take small steps.")
+        if emotion == constants.EMOTION_CONFUSED:
+            flags.append("Clarity risk - review goals frequently.")
+        
+        if constraints:
+            flags.append("Strict constraints applied - monitor resource usage.")
+            
+        return flags
+
+    def _get_success_criteria(self, intent_type, confidence):
+        if intent_type == constants.INTENT_LEARNING:
+            return ["Key concepts explained locally", "Simple exercise completed"]
+        elif intent_type == constants.INTENT_BUILDING:
+            return ["Prototype functional", "Core feature demonstrated"]
+        elif intent_type == constants.INTENT_PLANNING:
+            return ["Timeline finalized", "First step initiated"]
+        return ["Action taken"]
+
 # Initialize the engines
 classification_engine = IntentClassificationEngine()
 resolution_engine = AmbiguityResolutionEngine()
+planning_engine = ExecutionPlanningEngine()
 
 
 @app.route('/')
@@ -410,12 +569,36 @@ def resolve_ambiguity():
         }), 500
 
 
+@app.route(constants.API_PLAN_ENDPOINT, methods=['POST'])
+def generate_exec_plan():
+    """
+    API endpoint for execution planning (Module 3)
+    Expects JSON: Resolved intent object
+    """
+    try:
+        intent_object = request.get_json()
+        
+        if not intent_object:
+            return jsonify({
+                "error": "Missing intent object in request body"
+            }), 400
+            
+        result = planning_engine.generate_plan(intent_object)
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({
+            "error": f"Internal error: {str(e)}"
+        }), 500
+
+
 @app.route(constants.API_HEALTH_ENDPOINT, methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({
         "status": "healthy",
-        "modules": [constants.MODULE_1_NAME, constants.MODULE_2_NAME],
+        "modules": [constants.MODULE_1_NAME, constants.MODULE_2_NAME, constants.MODULE_3_NAME],
         "version": constants.APP_VERSION
     }), 200
 

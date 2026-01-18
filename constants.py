@@ -8,6 +8,7 @@ APP_NAME    = 'IntentBridge'
 APP_VERSION = '1.1.0'
 MODULE_1_NAME = 'Intent Classification Engine'
 MODULE_2_NAME = 'Ambiguity Resolution Engine'
+MODULE_3_NAME = 'Execution & Action Planning Engine'
 
 # Intent type constants
 INTENT_LEARNING = 'Learning'
@@ -41,6 +42,7 @@ RES_ASSUMPTIONS = 'AssumptionsMade'
 # API endpoints
 API_CLASSIFY_ENDPOINT = '/api/classify'
 API_RESOLVE_ENDPOINT = '/api/resolve'
+API_PLAN_ENDPOINT = '/api/plan'
 API_HEALTH_ENDPOINT = '/health'
 
 # Server configuration
