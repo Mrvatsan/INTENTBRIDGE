@@ -357,9 +357,12 @@ class ExecutionPlanningEngine:
         """
         Generate a structured execution plan
         """
+        logger.info("Starting execution planning (Module 3)")
+        
         # strict input validation
         res_type = intent_data.get('resolution_type') or intent_data.get('resolution_status')
         if res_type == constants.RES_CLARIFICATION or res_type == 'ClarificationRequired':
+            logger.info("Clarification required - skipping planning generation")
             # This module must not run if clarification is needed, but we handle it gracefully
             return {
                 "error": "Plan generation halted: Clarification required."
@@ -367,6 +370,9 @@ class ExecutionPlanningEngine:
 
         intent_type = intent_data.get('intent_type')
         confidence = intent_data.get('confidence_level', constants.CONFIDENCE_MEDIUM)
+        
+        logger.debug(f"Generating plan for: {intent_type} | {confidence} confidence")
+        
         emotion = intent_data.get('emotional_signal', constants.EMOTION_NEUTRAL)
         constraints = intent_data.get('constraints', [])
 
