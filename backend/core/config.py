@@ -1,3 +1,10 @@
+"""
+Configuration module for IntentBridge.
+
+Loads environment variables from .env and provides application-wide settings
+through a Pydantic BaseSettings instance. All settings can be overridden via
+environment variables or the .env file.
+"""
 from pydantic_settings import BaseSettings
 from typing import Optional
 
