@@ -1,3 +1,10 @@
+"""
+Base AI module for IntentBridge.
+
+Provides the foundation for all AI-powered modules. Handles Google Gemini
+API integration, structured JSON generation, prompt loading from templates,
+and mock response fallbacks for offline development.
+"""
 import json
 import logging
 from backend.core.config import settings
