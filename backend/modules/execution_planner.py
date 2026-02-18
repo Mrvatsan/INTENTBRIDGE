@@ -1,3 +1,10 @@
+"""
+Execution Planner module for IntentBridge.
+
+Produces comprehensive technical roadmaps from structured intent data,
+including product definition, architecture design, functional requirements,
+and milestone-based execution plans.
+"""
 from backend.modules.base import AIModule
 from jinja2 import Template
 import json
