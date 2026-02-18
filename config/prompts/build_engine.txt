@@ -1,0 +1,12 @@
+Generate a complete project source code based on the execution plan.
+Plan: {{plan}}
+
+Return a JSON object where keys are file paths and values are file contents.
+The structure should include:
+- backend/ (FastAPI)
+- frontend/ (React)
+- README.md
+- docker-compose.yml
+
+Ensure the code is modular and follows clean architecture principles.
+Return ONLY valid JSON: {"files": {"path/to/file": "content"}}
