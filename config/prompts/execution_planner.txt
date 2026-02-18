@@ -1,0 +1,11 @@
+Convert the clarified intent into a full execution roadmap.
+Include:
+1. Product Definition (Problem, Target Audience, Value Prop, Features)
+2. Functional Requirements
+3. Non-Functional Requirements
+4. Technical Architecture (Stack, API design, DB)
+5. Execution Roadmap (Milestones, Risk, Fallback)
+
+Structured Intent: {{structured_intent}}
+
+Return ONLY valid JSON matching this structure.
