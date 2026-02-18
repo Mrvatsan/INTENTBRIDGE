@@ -1,3 +1,9 @@
+"""
+Database initialization script for IntentBridge.
+
+Creates all database tables defined in the ORM models. In production,
+consider using Alembic for migrations instead of this script.
+"""
 from sqlalchemy import create_engine
 from backend.core.config import settings
 from backend.models.database import Base
