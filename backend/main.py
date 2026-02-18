@@ -1,3 +1,10 @@
+"""
+FastAPI application entrypoint for IntentBridge.
+
+Defines the REST API server with CORS middleware, request/response models,
+and the primary /api/v1/process endpoint that triggers the AI pipeline
+orchestrator for intent processing.
+"""
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from backend.core.orchestrator import Orchestrator
