@@ -132,10 +132,17 @@ function App() {
       <div className="visual-grid" />
 
       <div className="relative z-10 px-6 py-10 md:px-10">
-        <header className="max-w-4xl mx-auto mb-12">
-        <h1 className="text-4xl font-bold text-blue-400">IntentBridge</h1>
-        <p className="text-gray-400">Convert vague ideas into structured execution plans.</p>
-      </header>
+        <header className="max-w-6xl mx-auto glass-panel rounded-3xl border border-white/5 p-8 md:p-10 mb-10">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.45em] text-slate-400">Strategy cockpit</p>
+              <h1 className="mt-4 text-4xl md:text-5xl font-display font-semibold text-white">IntentBridge</h1>
+              <p className="mt-4 text-lg text-slate-300 max-w-2xl">
+                Translate raw intent into orchestrated execution paths. The bridge listens, clarifies, and returns a board-ready plan.
+              </p>
+            </div>
+          </div>
+        </header>
 
       <main className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Chat Section */}
