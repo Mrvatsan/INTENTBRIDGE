@@ -30,6 +30,12 @@ const quickIdeas = [
   }
 ];
 
+const formatFriendlyTitle = (key) => key
+  .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+  .replace(/_/g, ' ')
+  .replace(/\s+/g, ' ')
+  .replace(/^\w/, (c) => c.toUpperCase());
+
 function App() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
