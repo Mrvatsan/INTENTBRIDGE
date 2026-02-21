@@ -68,6 +68,15 @@ function App() {
     return Math.min(48 + messages.length * 6, 72);
   }, [messages.length, loading, plan]);
 
+  const planSections = useMemo(() => {
+    if (!plan) return [];
+    return Object.entries(plan).map(([key, value]) => ({
+      key,
+      title: formatFriendlyTitle(key),
+      content: value
+    }));
+  }, [plan]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
