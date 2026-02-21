@@ -44,6 +44,24 @@ function App() {
   const [sessionId] = useState(`session_${Math.random().toString(36).substr(2, 9)}`);
   const apiClient = useMemo(() => axios.create({ baseURL: API_BASE }), []);
 
+  const stats = useMemo(() => [
+    {
+      label: 'Session',
+      value: sessionId.split('_')[1].slice(-4).toUpperCase(),
+      meta: 'Live link'
+    },
+    {
+      label: 'Dialog turns',
+      value: messages.length || '00',
+      meta: 'Context depth'
+    },
+    {
+      label: 'State',
+      value: plan ? 'Execution ready' : loading ? 'Synthesizing' : 'Listening',
+      meta: plan ? 'Roadmap locked' : 'Awaiting clarity'
+    }
+  ], [messages.length, loading, plan, sessionId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
