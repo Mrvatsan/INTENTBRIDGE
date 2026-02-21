@@ -215,16 +215,26 @@ function App() {
                 </div>
               )}
           </div>
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input 
-              type="text" 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-gray-700 border-none rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-              placeholder="Describe your idea..."
-            />
-            <button className="bg-blue-500 px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Send</button>
-          </form>
+            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
+              <div className="flex gap-3">
+                <div className="flex-1 bg-slate-900/70 border border-white/10 rounded-2xl flex items-center px-4">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="flex-1 bg-transparent py-4 text-sm text-white placeholder:text-slate-500 focus:outline-none"
+                    placeholder="Describe the initiative, constraints, or the outcome you need..."
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="rounded-2xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 px-8 py-4 font-semibold tracking-wide shadow-lg shadow-sky-900/40 transition hover:translate-y-0.5"
+                >
+                  {loading ? 'Sending' : 'Send'}
+                </button>
+              </div>
+              <p className="text-xs text-slate-500">Your briefing feeds directly into the IntentBridge orchestrator. No data is persisted beyond this session.</p>
+            </form>
           </section>
 
         {/* Plan Section */}
