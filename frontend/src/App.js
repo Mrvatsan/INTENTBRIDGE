@@ -248,20 +248,34 @@ function App() {
                 {plan ? 'Activated' : 'Awaiting brief'}
               </span>
             </div>
-          {plan ? (
-            <div className="space-y-6">
-              <section>
-                <h3 className="text-blue-400 font-semibold">Product Definition</h3>
-                <pre className="text-xs text-gray-300 mt-2 whitespace-pre-wrap">{JSON.stringify(plan.ProductDefinition || plan.product_definition, null, 2)}</pre>
-              </section>
-              <section>
-                <h3 className="text-blue-400 font-semibold">Architecture</h3>
-                <pre className="text-xs text-gray-300 mt-2 whitespace-pre-wrap">{JSON.stringify(plan.TechnicalArchitecture || plan.technical_architecture, null, 2)}</pre>
-              </section>
+            <div className="mt-6 flex-1 overflow-y-auto space-y-5 pr-2 scrollbar">
+              {plan ? (
+                planSections.map(({ key, title, content }) => (
+                  <article key={key} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-display text-lg text-white">{title}</h3>
+                      <span className="text-[0.65rem] uppercase tracking-[0.4em] text-slate-400">Layer</span>
+                    </div>
+                    <div className="mt-4 text-sm text-slate-100 leading-relaxed whitespace-pre-wrap">
+                      {typeof content === 'object' && !Array.isArray(content) ? (
+                        <div className="space-y-4">
+                          {Object.entries(content).map(([subKey, subValue]) => (
+                            <div key={subKey}>
+                              <p className="text-[0.65rem] uppercase tracking-[0.5em] text-slate-400 mb-1">{formatFriendlyTitle(subKey)}</p>
+                              <p className="text-slate-100/90">{stringifyNode(subValue)}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>{stringifyNode(content)}</p>
+                      )}
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="text-gray-500 flex items-center justify-center h-full">Your plan will appear here...</div>
+              )}
             </div>
-          ) : (
-            <div className="text-gray-500 flex items-center justify-center h-full">Your plan will appear here...</div>
-          )}
           </section>
       </main>
       </div>
