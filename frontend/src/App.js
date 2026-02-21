@@ -165,9 +165,9 @@ function App() {
           </div>
         </header>
 
-      <main className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Chat Section */}
-        <div className="bg-gray-800 rounded-xl p-6 flex flex-col h-[600px]">
+        <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-8">
+          {/* Chat Section */}
+          <section className="glass-panel rounded-3xl border border-white/5 p-6 md:p-8 flex flex-col h-[600px]">
           <div className="flex-1 overflow-y-auto mb-4 space-y-4">
             {messages.map((m, i) => (
               <div key={i} className={`p-3 rounded-lg ${m.role === 'user' ? 'bg-blue-600 ml-8' : 'bg-gray-700 mr-8'}`}>
@@ -191,10 +191,10 @@ function App() {
             />
             <button className="bg-blue-500 px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition">Send</button>
           </form>
-        </div>
+          </section>
 
         {/* Plan Section */}
-        <div className="bg-gray-800 rounded-xl p-6 overflow-y-auto h-[600px]">
+          <section className="glass-panel rounded-3xl border border-white/5 p-6 md:p-8 flex flex-col h-[600px]">
           <h2 className="text-xl font-bold mb-4 border-b border-gray-700 pb-2">Execution Roadmap</h2>
           {plan ? (
             <div className="space-y-6">
@@ -210,7 +210,7 @@ function App() {
           ) : (
             <div className="text-gray-500 flex items-center justify-center h-full">Your plan will appear here...</div>
           )}
-        </div>
+          </section>
       </main>
       </div>
     </div>
