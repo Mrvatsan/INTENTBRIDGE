@@ -239,7 +239,15 @@ function App() {
 
         {/* Plan Section */}
           <section className="glass-panel rounded-3xl border border-white/5 p-6 md:p-8 flex flex-col h-[600px]">
-          <h2 className="text-xl font-bold mb-4 border-b border-gray-700 pb-2">Execution Roadmap</h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-display">Execution roadmap</h2>
+                <p className="text-sm text-slate-400">Blueprint generated from clarified intent.</p>
+              </div>
+              <span className={`px-4 py-1 text-xs rounded-full border ${plan ? 'border-emerald-400/40 text-emerald-300 bg-emerald-400/10' : 'border-white/10 text-slate-300'}`}>
+                {plan ? 'Activated' : 'Awaiting brief'}
+              </span>
+            </div>
           {plan ? (
             <div className="space-y-6">
               <section>
