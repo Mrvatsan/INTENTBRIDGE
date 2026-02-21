@@ -168,7 +168,18 @@ function App() {
         <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-8">
           {/* Chat Section */}
           <section className="glass-panel rounded-3xl border border-white/5 p-6 md:p-8 flex flex-col h-[600px]">
-          <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-display">Conversation stream</h2>
+                <p className="text-sm text-slate-400">Live intent parsing with contextual memory.</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Clarity</p>
+                <p className="text-3xl font-semibold text-sky-300">{clarityScore}%</p>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-5 pr-2 scrollbar">
             {messages.map((m, i) => (
               <div key={i} className={`p-3 rounded-lg ${m.role === 'user' ? 'bg-blue-600 ml-8' : 'bg-gray-700 mr-8'}`}>
                 <p>{m.content}</p>
