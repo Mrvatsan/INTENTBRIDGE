@@ -62,6 +62,12 @@ function App() {
     }
   ], [messages.length, loading, plan, sessionId]);
 
+  const clarityScore = useMemo(() => {
+    if (plan) return 92;
+    if (loading) return 67;
+    return Math.min(48 + messages.length * 6, 72);
+  }, [messages.length, loading, plan]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
