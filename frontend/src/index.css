@@ -23,3 +23,36 @@ body {
 code {
   font-family: 'Space Grotesk', 'Instrument Sans', Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.font-display {
+  font-family: 'Space Grotesk', 'Instrument Sans', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.visual-gradient {
+  position: absolute;
+  inset: -20% 0 0 0;
+  background: radial-gradient(circle at 20% 20%, rgba(59,130,246,0.35), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(236,72,153,0.2), transparent 40%),
+    radial-gradient(circle at 50% 70%, rgba(52,211,153,0.35), transparent 45%);
+  filter: blur(120px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.visual-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 120px 120px;
+  mask-image: radial-gradient(circle at center, rgba(255,255,255,0.4), transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.glass-panel {
+  background: rgba(15,23,42,0.65);
+  backdrop-filter: blur(26px);
+  box-shadow: 0 25px 80px rgba(2,6,23,0.55);
+}
